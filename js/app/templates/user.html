@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+
+
+<div class="container_bg" style="width: 800px;">
+
+    <div class="profile-header">
+        <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=85) }}">
+        <div class="profile-header" style="margin-left: 85px;">
+            <div class="user-intro" style="font-size: 40px;"> {{ user.username }}的资料</div>
+            <span style="font-style:italic;">最后离开时间: {{ moment(t).fromNow() }}</span>
+        </div>
+    </div>
+
+    <div class="profile-middle" style="margin-top: 20px;margin-bottom: 10px; border-bottom: 1px solid #e0e0e0;">
+        <span style="font-size:30px;">发布的全部文章</span>
+    </div>
+    
+    <div class="user_blog" style="margin-top: 10px;">
+        <ul class="user_posts_" style="list-style-type: none; padding: 0px; margin: 16px 0px 0px 0px;">
+            {% for post in posts %}
+            <li class="user_post_" style="padding: 8px;border-bottom: 1px solid #726969;">
+                <div class="user-post-content">
+                        <div>
+                            <a href="{{ url_for('.user', username=post.author_post.username) }}">
+                                {{ post.author_post.username }} 
+                            </a>
+                            <span class="blog-date-1" style="font-style:italic;">{{moment(post.timestamp).fromNow()}}</span>发布
+                        </div>
+                        <div>
+                            <a href="{{ url_for('.showpost', id=post.id) }}">
+                                {{ post.title }}
+                            </a>
+                        </div>
+                        <div class="post-body">
+                            {{ post.body }}
+                        </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</div>
+
+<div class="pagination" style="width:100%; text-align:center; padding:0px; margin:0px;">
+        <ul class="pagination">
+            <li {% if not pagination.has_prev %} class="disabled" {% endif %}>
+                <a href="{% if pagination.has_prev %}
+                    {{ url_for('.user', username=user.username, page=pagination.prev_num) }}
+                    {% else %}#{% endif %}">
+                    &laquo;
+                </a>
+            </li>
+            {% for p in pagination.iter_pages() %}
+                {% if p %}
+                    {% if p == pagination.page %}
+                    <li class="active">
+                        <a href="{{ url_for('.user', username=user.username,page=p)}}">{{ p }}</a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="{{ url_for('.user', username=user.username,page=p)}}">{{ p }}</a>
+                    </li>
+                    {% endif %}
+                {% else %}
+                    <li class="disabled"><a href="#">&hellip;</a></li>
+                {% endif %}
+            {% endfor %}
+            
+            <li {% if not pagination.has_next %} class="disabled" {% endif %}>
+                <a href="{% if pagination.has_next %}
+                    {{ url_for('.user', username=user.username,page=pagination.next_num) }}
+                    {% else %}#{% endif %}">
+                    &raquo;
+                </a>
+            </li>
+    
+        </ul>
+</div>
+
+{% endblock %}

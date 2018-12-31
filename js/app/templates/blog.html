@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block page_content %}
+
+<div class="container_bg" style="width: 800px;">
+    <div class="blog-title" style="margin-top:50px; font-size:20px; text-align: center; font-weight: bold;"> 
+        {{ post.title }}
+    </div>
+    <div class="blog-author" style="font-size:15px; text-align: center; ">
+        作者: <a href="{{ url_for('.user', username=post.author_post.username) }}">{{ post.author_post.username }}</a>
+    </div>
+
+    <div class="blog-body" style="margin-bottom: 20px;">
+        <p> {{ post.body }}</p>
+
+        <div class="blog-date" style="text-align: right;">
+            <span class="blog-date-1" style="font-style:italic;">{{moment(post.timestamp).fromNow()}}</span>发布
+        </div>
+    </div>
+
+    {% if user == current_user %}
+        <a href="{{ url_for('.edit', id=post.id) }}">编辑</a>
+    {% endif %}
+
+    <div class="comment-1" style="text-align:left; margin-top: 10px; margin-bottom: 10px;">
+        <span class="comment-1" style="font-weight:bold; font-size:20px;">评论</span>
+    </div>
+
+
+    {% if current_user.is_authenticated %}
+        {{ wtf.quick_form(form) }}
+    {% endif %}
+
+    
+
+    {% include '_comments.html' %}
+
+</div>
+{% endblock %}

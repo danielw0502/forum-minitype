@@ -1,0 +1,15 @@
+<ul class="comments">
+    {% for comment in comments %}
+    <li class="comment">
+        <div class="comments-content">
+            <div>
+                <a href="{{ url_for('.user', username=comment.author_comment.username)}}">
+                        {{ comment.author_comment.username }}
+                </a>
+                <span class="comments-date-1" style="font-style:italic;float:right;">{{moment(comment.timestamp).fromNow()}}<span style="font-style: normal;">发布</span></span>
+            </div>
+        <div class="comments-body">{{ comment.body }}</div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
